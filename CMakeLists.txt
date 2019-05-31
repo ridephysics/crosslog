@@ -1,5 +1,6 @@
 set(CROSSLOG_SRCS_COMMON
     crosslog.c
+    hexdump.c
 )
 set(CROSSLOG_INCS_COMMON
     include

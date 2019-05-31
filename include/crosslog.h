@@ -66,5 +66,8 @@
 #endif
 
 #define CROSSLOG_ASSERT(x) if(!(x)) { CROSSLOGE("Assertion failed: %s", #x); CROSSLOG_ABORT(); }
+#define CROSSLOG_HEXDUMP(buf, sz) _crosslog_hexdump(buf, sz)
+
+void _crosslog_hexdump(const void *buf, size_t sz);
 
 #endif /* CROSSLOG_H */
