@@ -7,6 +7,7 @@
 
 #if defined(__ZEPHYR__)
     #include <misc/printk.h>
+    #include <kernel.h>
 
     #define CROSSLOG_INTERNAL(prefix, fmt, ...) \
         printk(prefix " " CROSSLOG_TAG ": " fmt "\n", ##__VA_ARGS__)
@@ -16,19 +17,25 @@
     #define CROSSLOGW(fmt, ...) CROSSLOG_INTERNAL("W", fmt, ##__VA_ARGS__)
     #define CROSSLOGE(fmt, ...) CROSSLOG_INTERNAL("E", fmt, ##__VA_ARGS__)
 
+    #define CROSSLOG_ABORT() k_panic()
+
 #elif defined(ESP_PLATFORM)
     #include <esp_log.h>
+    #include <stdlib.h>
 
     #define CROSSLOGD(fmt, ...) ESP_LOGD(CROSSLOG_TAG, fmt, ##__VA_ARGS__)
     #define CROSSLOGI(fmt, ...) ESP_LOGI(CROSSLOG_TAG, fmt, ##__VA_ARGS__)
     #define CROSSLOGW(fmt, ...) ESP_LOGW(CROSSLOG_TAG, fmt, ##__VA_ARGS__)
     #define CROSSLOGE(fmt, ...) ESP_LOGE(CROSSLOG_TAG, fmt, ##__VA_ARGS__)
 
+    #define CROSSLOG_ABORT() abort()
+
 #elif defined(__unix__)
     #include <stdio.h>
     #include <unistd.h>
     #include <string.h>
     #include <errno.h>
+    #include <stdlib.h>
 
     #define CROSSLOG_COLOR_RESET "\x1B[0m"
     #define CROSSLOG_COLOR_PREFIX "\x1B[38;5;"
@@ -49,8 +56,11 @@
     #define CROSSLOGE(fmt, ...) CROSSLOG_INTERNAL("E", RED, fmt, ##__VA_ARGS__)
 
     #define CROSSLOG_ERRNO(fmt, ...) CROSSLOGE(fmt ": %s(%d)", ##__VA_ARGS__, strerror(errno), errno)
+    #define CROSSLOG_ABORT() abort()
 #else
     #error "unsupported platform"
 #endif
+
+#define CROSSLOG_ASSERT(x) if(!(x)) { CROSSLOGE("Assertion failed: %s", #x); CROSSLOG_ABORT(); }
 
 #endif /* CROSSLOG_H */
