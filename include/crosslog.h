@@ -23,6 +23,8 @@
 #elif defined(ESP_PLATFORM)
     #include <esp_log.h>
     #include <stdlib.h>
+    #include <string.h>
+    #include <errno.h>
 
     #define CROSSLOGV(fmt, ...) ESP_LOGV(CROSSLOG_TAG, fmt, ##__VA_ARGS__)
     #define CROSSLOGD(fmt, ...) ESP_LOGD(CROSSLOG_TAG, fmt, ##__VA_ARGS__)
@@ -30,6 +32,7 @@
     #define CROSSLOGW(fmt, ...) ESP_LOGW(CROSSLOG_TAG, fmt, ##__VA_ARGS__)
     #define CROSSLOGE(fmt, ...) ESP_LOGE(CROSSLOG_TAG, fmt, ##__VA_ARGS__)
 
+    #define CROSSLOG_ERRNO(fmt, ...) CROSSLOGE(fmt ": %s(%d)", ##__VA_ARGS__, strerror(errno), errno)
     #define CROSSLOG_ABORT() abort()
 
 #elif defined(__unix__)
