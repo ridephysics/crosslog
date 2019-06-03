@@ -33,6 +33,7 @@
     #define CROSSLOGE(fmt, ...) ESP_LOGE(CROSSLOG_TAG, fmt, ##__VA_ARGS__)
 
     #define CROSSLOG_ERRNO(fmt, ...) CROSSLOGE(fmt ": %s(%d)", ##__VA_ARGS__, strerror(errno), errno)
+    #define CROSSLOG_ESPERR(erc, fmt, ...) CROSSLOGE(fmt ": %s(%d)", ##__VA_ARGS__, esp_err_to_name((erc)), (erc))
     #define CROSSLOG_ABORT() abort()
 
 #elif defined(__unix__)
